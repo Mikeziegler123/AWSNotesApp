@@ -1,0 +1,106 @@
+AWS ELASTIC BEANSTALK(EB) OVERVIEW: A developer centric view of deploying an application on AWS.
+	
+	EB is a Managed Service: Instance configuration / OS is handles by ElasticBeanStalk.
+	EB Deployment strategy is configurable but performed by ElasticBeanStalk.
+
+    EB THREE ARCHITECTURE MODELS:
+	Single Instance Deployment: Great for Development
+	LB + ASG: Great for Production or pre-production web applications
+	ASG only: Great for non-web apps in production (workers, etc..)
+
+    EB THREE COMPONENTS:
+	(1)Application
+	(2)Application version: each deployment gets assigned a version
+	(3)Environment name (dev, test, prod...): free naming
+	
+	Ex: How it Works:
+	Create Application   ->  Upload Version ->   Release to Envirnments
+	Create Envirnments   ->    (+ alias)    ->
+
+	
+	*DEPLOYMENT MODES:
+		(DEV) Single Instance Deployment: 
+			1 EC2 Instance, 1 Elastic IP, 1 Auto-Scaling Group, 1 AZ.. .
+
+		(PROD) High Availability with Load Balancer
+			ASG, Multiple AZs with several EC2 in each, SG's, ELB
+
+	*DEPLOYMENT OPTIONS(UPDATES):
+		(1)ALL AT ONCE: ------------------(Fastest, Downtime)  
+		(2)ROLLING: ----------------------(Half & Half)           -running under capacity 
+		(3)ROLLING W/ ADDITIONAL BATCHES:-(new instances w/ Rolling) - running at capacity
+		(4)IMMUTABLE: --------------------(New ASG, New Instances, No Downtime)
+			
+	All parameters set in the UI can be configured with code using files:
+		- In the .ebextensions/ directory in the root of source code.
+		- Must be YAML / JSON format.
+		- .config extension (example: logging.config).
+		- Modify default setting using: option_settings parameter.
+		- Ables you to add resources such as RDS, ElastiCache, DynamoDB.
+		- All Resources managed by .ebextensions file are deleted if envirnment goes away.
+
+	EB CLI: Additional CLI making working with ElasticBeanStalk through CLI easier: smd: "eb"
+
+	*Elastic Beanstalk relies on creating CloudFormation stacks.
+
+	*ELASTIC BEANSTALK DEPENDENCIES:
+		- Describe Dependencies: Python: "requirements.txt", Node.js: "package.json".. .
+		- Package code as zip
+		- Zip file is uploaded to each EC2 machine
+		- Each EC2 machine resolves dependencies (SLOW)
+		 *Optimization in case of long deployments: Package Dependencies with source code
+                  to improve deployment performance and speed.
+	
+***EXAM TIPS***:
+	-Beanstalk can work with HTTPS
+		-Load SSL Certificate onto Load Balancer
+		- Can be done from the Console: (EB Console)
+		- Can be done from the code: .ebextensions/securelistener-alb.config
+		-SSL Certificate can be provisioned using AWS Certificates Manager or CLI
+		- Must configure a security group rule to allow incoming port 443 (HTTPS port)
+
+	- Beanstalk redirect HTTP to HTTPS: effectively making your application entirely secure.
+		- Configure application instances to redirect HTTP to HTTPS
+		- OR configure Application Load Balancer (ALB Only) with a rule.
+		- Make sure health checks are not redirected (so they keep giving 200 OK)
+
+	Beanstalk Lifecycle Policy: Can store at most 1000 application versions
+		- Deploy Lifecycle Policy
+			- Based on time(old versions are removes) 
+			- Based on Space(when you have to many versions) 
+		- Versions that are not currently used won't be deleted 
+		- Option not to delete the source bundle in s3 to prevent data loss
+	
+	CREATING A LIFECYCLE POLICY: In EB, click on name of application->application version->
+				      Settings->LifeCycle policy<enable>.
+
+	WEB SERVER vs. WORKER ENVIRONMENT: If app performs tasks to long to complete, offload these 	           tasks to a dedicated worker environment: 
+		-> ( i.e Processing a video, generating a big .zip fil, etc.. ) <-
+	  *In Worker Environments, you can define periodic tasks in a file: "cron.yaml".
+	
+	RDS \W ELASTIC BEANSTALK: Great for DEV & TEST
+		- Not great for PROD: Database lifecycle is tied to BeanStalk envirnment lifecycle
+		- Best for PROD: Separately create RDS DB, provide EB App with COnnection String.
+
+	STEPS TO MIGRATE AN RDS DB COUPLED IN EB TO A STANDALONE RDS DB:
+		(1)Take an RDS DB Snapshot.
+		(2)Enable Deletion protection in RDS.
+		(3)Create a new BeanStalk Envirnment without an RDS, point to existing old RDS.
+		(4)Perform blue/green deployment and swap old envirnments.
+		(5)Terminate old envirnment (RDS won't get deleted thanks to protection).
+		(6)Delete CloudFormation stack (will be DELETE_FAILED state).
+				
+ELASTIC BEANSTALK + ECS:
+	- You can run Elastic Beanstalk in Single & Multi Docker Container mode
+	- Multi Docker helps run multiple containers per EC2 instance in EB
+	- This will create for you:
+		- ECS Cluster
+		- EC2 instances, configured to use the ECS Cluster
+		- Load Balancer (in high availability mode)
+		- Task definitions and execution
+	* Requires a config file Dockerrun.aws.json at the root of source code.
+	* Your Docker images must be stored in ECR.
+
+
+
+

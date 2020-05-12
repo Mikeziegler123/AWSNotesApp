@@ -1,0 +1,42 @@
+AMAZON ELASTICACHE OVERVIEW:	     
+	- In memory DB
+	- Redis / Memcached
+	- Cached capability
+
+		-Elasticache is to get managed Redis or Memcached
+		-Helps make your application stateless
+		-Very similar to RDS
+		-It's an RDS for caches
+
+ANOTHER SOLUTION: USER SESSION STORE
+	(1) User Logs into application
+	(2) The Application writes the session data into ElastiCache
+	(3) The user logs into another instance of the application
+	(4)The instance retrieves the data, and the user is already logged in.
+REDIS:
+	Redis is an in-memory key-value store
+	Cache survives reboots by default(called persistence)
+	Support for Read-Replicas
+MEMCACHED:
+	Memcached is an in-memory object store
+	Cache doesn't survive reboots
+	Use Cases:
+		Quick retrieval of objects from memory
+		Cache often accessed objects
+	Overall, Redis has largely grown in popularity and has better feature sets than Memcached
+	Personally recommends Redis for application cache.
+
+AWS Elasticache Strategies:
+	Elasticache is helpful for read-heavy application workloads
+	Elasticache is helpful for compute-intensive workloads
+
+	(1)LAZY LOADING - Load data only when necessary.
+		(A)Always look when there is a read request into Elasticache
+			(a)Cache Hit: Great!
+			(b)Cache Miss-> Elasticache returns NULL->Read from DB->Write to cache
+	(2)WRITE THROUGH - Ass or update cache when database is updated
+		(A)Cache Hit: Great!
+		(B) Cache Miss->Write to DB->Write to cache
+
+
+

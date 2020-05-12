@@ -1,0 +1,43 @@
+AWS CLOUDWATCH OVERVIEW:
+
+	CLOUDWATCH METRICS: Collect and track key metrics.
+		- Metric: Variable to monitor.
+		- Metrics belong to namespaces, and have up to 10 Dimensions.
+		- Dimension: An attribute of a metric.
+		- Metrics have timestamps
+		* Enable Group Metrics Collection: for ASG group metrics.
+		* Enable Detailed monitoring: Metrics every 1 Minute.
+
+		DETAILED MONITORING: 
+			- Default every 5 minutes, can drop to every 1 minute.
+			- Free Tier: Allows up to 10 detailed monitoring metrics.
+ 
+		CUSTOM METRICS: Default: Every 1 minute.
+			- Enable High Resolution(every 1 second)-> Enable "StorageResolution" API.
+	
+	CLOUDWATCH ALARMS: React in real-time to metrics / events.
+		- Used to trigger notifications for any metric.
+		- Can go to Auto Scaling, EC2 Actions, SNS Notifications.
+		
+		ALARM STATES:
+			- OK: Alarm is not doing anything.
+			- INSUFFICIENT_DATA: Metric is missing some data points.
+			- ALARM: When alarm threshold is being passed.
+
+	CLOUDWATCH LOGS: Collect, monitor, analyze and store log files.
+		- Applications can send logs to CLoudWatch using the SDK.
+		- Logs can be exported to S3, or streamed to ElasticSearch for analytics.
+		Log Groups: Arbitrary name, usually representing an Application.
+		Log Streams: Instances within an application / log files / containers
+		Log Expiration Policy: Never expire, 30 days, etc..
+		Use AWS CLI to tail CLoudWatchLogs.
+		Requires proper IAM Permissions to send logs.		 
+	
+	CLOUDWATCH EVENTS: Send notifications when certain events happen in your AWS.
+		- Schedule: Fixed rate or Cron expresson
+		- Event Pattern: Event rules to react to a service doing something
+			-Ex: CodePipeline state changes!
+		- Triggers to Lambda functions, SQS/SNS/Kinesis Messages
+		- CloudWatch events create a small JSON document giving information about the change
+
+

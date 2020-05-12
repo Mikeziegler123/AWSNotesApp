@@ -1,0 +1,16 @@
+AWS CODEPIPELINE OVERVIEW: Visually orchestrate Source, Build, Load Testing, and Deployment for continuous delivery.
+
+	Artifacts: Files stored in s3 that get passed on to the next page.
+
+	
+	CodePipeline Troubleshooting: State changes trigger AWS CloudWatch Events.
+		Ex: Event for failed pipelines.
+		Ex: Events for cancelled stages.
+
+	*Make sure the "IAM Service Role" attached does have enough permissions (IAM Policy)
+
+	Action Group(s): Go between stages.
+		-Stages can have multiple action groups.
+
+
+
