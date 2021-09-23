@@ -1,2 +1,50 @@
-F
+Load Balancer: A server that forwards internet traffic to instances downstream.
+
+Why use a load balancer:
+	Spread the load to multiple downstream instances
+	Expose a single point of access(DNS) to your application
+	Seemlessly handle failures of downstream instances
+	Do regular health checks to your instances
+	Provide SSL termination (HTTPS) for your websites
+	Enforse stickiness with cookies
+	High availability across zones
+	Separate public traffic from private traffic
+	
+AWS Elastic Load Balancer(ELB): EC2 (AWS Managed) Load balancer
+	3 Types:
+		Classic Load Balancer(V1) Layer 5
+			Deprecated			
+
+		Application Load Balancer(V2) Layer 7
+			HTTP, HTTPS & WebSocket Traffic
+			Multiple HTTP applications across machines
+			Multiple applications on the same machine
+			Based on route in URL
+			Based on hostname in URL
+			Awesome for micro services & container-based application
+				i.e Docker & Amazon ECS
+			Port mapping feature to redirect to a dynamic port
+			X-Forwarded-For: to get User Ip
+			Can set up internal(private) or external(public) ELB
+
+		Network Load Balancer(V2) Layer 4 : Used for extreme performance	
+			HTTP Traffic
+			Sees Client IP directly
+LB Error Checking:
+	4xx errors:  client induced
+	5xx errors:  application induced
+	503 Errors: at capacity or no registered target
+	Connection errors: Check Security Groups
+
+HEALTH CHECKS:  Crutial for Load Balancers, done on a port and a route with "/health"
+		Enables ELB to know which instance is available to reply to requests.
+		if ( /health ) is not 200(OK), then instance is unhealthy
+
+
+
+	
+		
+			
+
+
 

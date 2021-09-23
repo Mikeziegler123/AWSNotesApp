@@ -1,5 +1,32 @@
-B
+AMAZON ELASTIC CONTAINER REGISTRY OVERVIEW:
+	- ECR is a private Docker image repository.
+	- Acess is controlled through (IAM permission errors => policy)
 
+	* You need to run some commands to push pull:
+		-  $(aws ecr get-login --no-include-email --region eu-west-1)
+		- docker push 1234567890.dkr.ecr.eu-west-1.amazonaws.com/demo:latest
+		- docker pull 1234567890.dkr.ecr.eu-west-1.amazonaws.com/demo:latest
+
+CREATING A DOCKER CONTAINER:
+//PowerShell Authentication
+(Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin 080916242993.dkr.ecr.us-east-1.amazonaws.com
+
+//Navigate to folder where docker container is located, and build the docker container:
+docker build -t demo .
+
+//Tag the container with a name for access purposes.
+docker tag demo:latest 080916242993.dkr.ecr.us-east-1.amazonaws.com/demo:latest
+
+//Push Container to ECR
+docker push 080916242993.dkr.ecr.us-east-1.amazonaws.com/demo:latest
+
+//Pull Container from ECR
+docker pull 080916242993.dkr.ecr.us-east-1.amazonaws.com/demo:latest
+
+
+FARGATE: 
+	- Don't provision EC2 instances
+	- Just create task definitions, and AWS will run our containers for us!
 
 
 

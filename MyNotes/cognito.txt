@@ -1,2 +1,35 @@
-U
+AWS COGNITO OVERVIEW:
+
+	We want to give our users an identity so that they can interact with our application.
+	--------------------------------------------------------------------------------	
+	(1)COGNITO USER POOLS (CUP):
+		- Sign in functionality for all app users
+		- Integrate with API Gateway
+		- Create Serverless database of user for your mobile apps
+		- Simple Login: Username (or email) / password combination
+		- Possibility to verify emails / phone numbers and add MFA
+		- Can enable Federated Identities (Facebook, Google, SAML)
+		- Sends back a JSON Web Tokens (JWT) 
+		- Can be integrated with API Gatewat for authentication
+	--------------------------------------------------------------------------------
+	(2)COGNITO IDENTITY POOLS (FEDERATED IDENTITY (FIP)):
+		- Provide AWS Credentials directly to our app users so that they can access our reso			urces directly.
+		- Integrate with Cognito User Pools as an identity provider
+		GOALS: To provide direct access to AWS Resources from client side.
+			HOW:
+		- Log in to federated identity provider - or remain anonymous
+		- Get tremporary AWS credentials back from the Federated Identity Pool
+		- These credentials come with a pre-defined IAM policy stating permissions 	
+ 		- STS Provides Temporary security credentials
+	--------------------------------------------------------------------------------
+	(3)COGNITO SYNC(DEPRECATED): 
+		- Synchronize data from device to Cognito.
+		- May be deprecated and replaced by AppSync.
+		- Store preferences, configuration, state of app
+		- Cross device synchronization (Any platform)
+		- Offline capability (synchronization when back online)
+		- Requires FederatedIdentity Pool in Cognito (Not user Pool)
+		- Stored data in datasets (up to 1MB)
+		- Up to 20 datasets to synchronize.
+	
 

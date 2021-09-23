@@ -1,3 +1,118 @@
-Z
+AWS CLOUDFORMATION OVERVIEW:
+
+	Infrastructure as Code: Write code that creates our infrastructure for us.
+
+	HOW IT WORKS:   - Templates are uploaded to S3, and referenced in CloudFormation.
+			- To update stack we can just upload a new template version to AWS.
+			- Stacks are identified by a name.
+			- Deleting a stack deleted every single artifact that was created by it. 
+
+	EDITING TEMPLATES:
+		MANUAL: Edit manually using CloudFormation Designer, use console to input parameters
+		AUTOMATED: Edit templates in YAML file, and deploy template using CLI
+
+	TEMPLATE COMPONENTS:
+		(1) Resources: AWS Resources declared in the template (MANDATORY)
+		(2) Parameers: Dynamic inputs for template.
+		(3) Mappings: Static Variables for your template
+		(4) Outputs: References to what has been created
+		(5) Conditionals: List of conditions to perform resource creation
+		(6) Meta-Data
+
+	TEMPLATE HELPERS:
+		1. References
+		2. Functions
+
+	RESOURCES: Core of CloudFormation templates, over 254 resources available.
+	
+	RESOURCE TYPES: 
+ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
+
+	PARAMETERS: A way to provide inputs to your AWS CloudFormation template.
+	 When to use: Is this resource configuration likely to change in the future?
+	
+	PARAMETER SETTINGS:
+		TYPE:			   CONSTRAINTS:
+		  - String			     - ConstrintDescription (String)
+		  - Number			     - Min/MaxLength 
+		  - CommaDelimitedList		     - Min/MaxValue
+		  - List<Type>			     - Defaults
+		  - AWS Parameter (to help   - AllowedValues (array)
+		    catch invalid values,    - AllowedPattern (regexp)
+		    match against existing   - NoEcho (Boolean)
+		    values in AWS Account	   
+		 DESCRIPTION:
+
+	REFERENCING A PARAMETER: Shorthand -> !Ref , Standard -> Fn::Ref
+
+	PSEUDO PARAMETERS:   !Ref <PsuedoParameter>
+		- AWS::AccountId              -> Returns Accound Id      :   i.e. 1234567890
+		- AWS::NotificationARNs       -> Returns SNS Topic arn
+		- AWS::NoValue                -> Does not return a value
+		- AWS::Region                 -> Returns Region          :   i.e. us-east-2
+		- AWS::StackId                -> Returns stack arn ID
+		- AWS::StackName              -> Returns stack name
+
+	MAPPINGS: Fixed values within CloudFormation Template.
+	Ex. YAML:
+		Mappings:
+		   Mapping01:
+		      Key01:
+		  	 Name: Value01
+		      Key02:
+		  	 Name: Value02
+		      Key03:
+		  	 Name: Value03
+
+	ACCESSING MAPPING VALUES: " Fn::FindInMap " : Returns a named value from a specific key.
+		Ex: !FindInMap [ MapName, TopLevelKey, SecondLevelKey ]
+
+	OUTPUTS, EXPORTS: Optional output values that we can import into other stacks.
+	Note: Cannot delete a stack that still has outputs being referenced somewhere else.
+	
+	OUTPUTS, CROSS STACK REFERENCE " Fn::ImportValue, !ImportValue "
+
+	CONDITIONS: Used to control the creation of resources or outputs based on a condition.
+		Typically based on: Envirnment, Region, Any Parameter Value
+
+	DEFINING A CONDITION:
+	//(1) Condition definition: will only be True if EnvType Parameter equals "prod"
+		Conditions:
+		    CreateProdResources: !Equals [ !Ref EnvType, prod ]
+
+ 	//(2) Will only execute creation of Resource if Condition is True.	
+		Resources:
+		   MountPoint:
+			Type: "AWS::EC2::VolumeAttachment"
+			Condition: CreateProdResources	
+
+     ***INTRINSIC FUNCTIONS:
+		- Ref: 
+			Parameters => returns value of parameter
+			Resources => returns physical ID of the underlying resource
+		- Fn::GetAtt: Returns Attributes of Resources.
+		- Fn::FindInMap: Returns vsalue in map.
+		- Fn::ImportValue: Imports previously exported functions
+		- Fn::Join:  !Join [ delimiter, [ comma-delimited list of values ] ]
+			Ex:    !Join [ ":", [ a, b, c ] ]   returns "a:b:c:"
+		- Fn::Sub:  Substitute cariables from a string.
+			Ex: Sub string(must contain ${VariableName}
+		- Logical Functions (Conditions): Listed above.
+
+	ROLLBACKS: 
+		CREATION FAILS: Everything gets deleted, can look at log, Optioon to disable rollback and troubleshoot what happened.
+		UPDATE FAILS: Stack automatically rolls back to the previous known working state, ability to see in the log what happened and error messages.
+
+		-Everything gets deleted
+
+
+# create an s3 bucket
+aws s3 mb s3://mike-code-sam
+
+# package cloudformation
+aws cloudformation package --s3-bucket mike-code-sam --template-file template.yaml --output-template-file gen/template-generated.yaml
+
+# deploy
+aws cloudformation deploy --template-file gen/template-generated.yaml --stack-name hello-world-sam --capabilities CAPABILITY_IAM
 
 

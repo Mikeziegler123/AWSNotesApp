@@ -1,3 +1,68 @@
-2
+AWS CODECOMMIT OVERVIEW: Store Our Code.
+
+CODECOMMIT------------------------------------------------------------------------------------------
+	- Version Control: The ability to understand the various changes that happened to the code over time, and possibly roll back.
+	- All these are enables by using a version control system such as Git.
+	- A Git repository can live on one's machine, but it usually lives on a central online repository.
+	Benefits are:
+		- Collaborate with other developers.
+		- Make sure the code is backed-up somewhere.
+		- Make sure it's fully viewable and auditable.
+	More:	
+	-> No size limit on repositories.
+	-> Fully managed, highly available.
+	-> Code only in AWS cloud account.
+	-> Secure (encrypted, access control, etc...)
+	-> Integrated with Jenkins/CodeBuild/Other CI tools.
+	
+	CODECOMMIT SECURITY:
+	  - Interactions done using Git(standard)
+	  
+	 -> AUTHENTICATION IN GIT:
+	     - SSH Keys: AWS Users can configure SSH Keys in their IAM console.
+	     - HTTPS: Done through the AWS CLI Authentication helper or Generating HTTPS credentials
+	     - MFA (multi-factor authentication) can be enabled for extra safety.
+	 
+	  -> AUTHORIZATION IN GIT: 
+	     - IAM Policies manage user / roles rights to repositories
+	  
+	  -> ENCRYPTION:
+	     - Repositories are automatically *encrypted-at-rest using KMS*
+	     - Encrypted in transit (can only use HTTPS or SSH = both secure)
+	  
+	  -> CROSS ACCOUNT ACCESS:
+	     - Do not share SSH Keys.
+	     - Do Not share your AWS credentials
+	     - Use IAM Role in your AWS Account and use AWS STS(With AssumeRole API)
+
+	  -> NOTES: GitHub Users - AWS IAM users & Roles.
+
+	CODECOMMIT NOTIFICATIONS: You can trigger notifications in CodeCOmmit using AWS SNS, or
+	AWS Lambda, or AWS CloudWatch Event Rules.
+		
+		SNS:
+		- Deletion of branches.
+		- Trigger for pushes that happens in master branch.
+		- Notify external Build System.
+
+		CLOUDWATCH EVENT RULES:
+		- Trigger for pull request updates (created / updated / deleted / commented)
+		- Commit comment events
+		- CloudWatch Event Rules goes into an SNS topic.
+
+	*Notifications: Pull Request/Commit Comment Events, etc...
+	*Triggers: Code related Events, Pushing code, creating branch, deleting branches, etc...
+
+	IAM->Users->SSH keys for AWS CodeCommit:
+
+	IAM->Users->HTTPS Git credentials for AWS CodeCommit:
+		(1) Generate Git Credentials
+		(2) Download Credentials
+		(3) In Repository->Clone URL->Clone HTTPS(URL)
+		(4) In Chrome-> install git <Windows>
+		(5) Cmd->git --version
+		(6) Cmd->git clone <CLONE HTTPS OUTPUT>
+		(7) git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/my-nodejs-app
+		(8) Enter generated Git credentials.
 
 
