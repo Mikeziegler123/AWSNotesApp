@@ -5,3 +5,5 @@ To Run:
 
 (2) Double Click "Note_Panel.py"
 ![AWSNotesApp.PNG](https://github.com/Mikeziegler123/AWSNotesApp/blob/master/NotesApp.PNG?raw=true)
+![AWSNotesApp.PNG](https://github.com/Mikeziegler123/AWSNotesApp/blob/master/NotesAppNotes?raw=true)
+![AWSNotesApp.PNG](https://github.com/Mikeziegler123/AWSNotesApp/blob/master/Capture.PNG?raw=true)
